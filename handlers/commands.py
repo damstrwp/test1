@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram import F
-from keyboards.inline import film_keyboard
+from keyboards.inline import film_keyboard,start_keyboard
 import random
 
 command_router = Router()
@@ -10,15 +10,14 @@ command_router = Router()
 
 @command_router.message(Command('start'))
 async def handle_start(m: Message) -> None:
-    start_message = (f"Привет! Это бот для поиска интересных фильмов по вашим интересам.\n"
-                     f"Нажми на /help ,чтобы узнать о командах,которые я умею.")
-    await m.answer(text=start_message)
+    start_message = (f"Привет! Это бот для поиска интересных фильмов по вашим интересам.")
+    await m.answer(text=start_message,reply_markup=start_keyboard)
 
 
 @command_router.message(Command('about'))
 async def handle_about(m: Message) -> None:
     about_message = (f"Этот бот ищет фильмы по вашим критериям и выводит их рейтинг.")
-    await m.answer(text=about_message)
+    await m.answer(text=about_message,reply_markup=start_keyboard)
 
 
 @command_router.message(Command('films'))
