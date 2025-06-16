@@ -4,6 +4,8 @@ from keyboards.inline import films_keyboard, film2_keyboard, film_keyboard, menu
     poisk_keyboard
 from aiogram.types import ReplyKeyboardRemove
 from handlers.commands import handle_films, handle_film, handle_randfilms, handle_help, handle_menu, handle_about
+from aiogram.fsm.context import FSMContext
+from states import Form
 
 callback_router = Router()
 
@@ -30,10 +32,25 @@ async def handle_aboutbutton(callback: aiogram.types.CallbackQuery):
     await callback.message.answer(f"Этот бот ищет фильмы по вашим критериям и выводит их рейтинг.")
 
 
-@callback_router.callback_query(F.data == "edit")
-async def handle_editbutton(callback: aiogram.types.CallbackQuery):
-    await callback.answer("Запомнил!")
+@callback_router.callback_query(
+    F.data.in_({"romance", "action", "comedy", "thriller", "documentary", "cartoon", "detective", "horror"}))
+async def handle_genre(callback: aiogram.types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await state.set_state(Form.genre)
+    await state.update_data(genre=callback.data)
     await callback.message.edit_text(text="Выбери года", reply_markup=films_keyboard)
+
+
+@callback_router.callback_query(
+    F.data.in_({"eighty", "ninety", "zero", "ten", "twenty"}))
+async def handle_year(callback: aiogram.types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await state.set_state(Form.years)
+    await state.update_data(years=callback.data)
+    data = await state.get_data()
+    await callback.message.answer(text=f"Жанр: {data['genre']}, Года: {data['years']}")
+    await handle_randfilms(callback.message)
+    await callback.message.edit_text(text="Вот список фильмов по вашим критериям:", reply_markup=None)
 
 
 @callback_router.callback_query(F.data == "str2")
@@ -71,7 +88,7 @@ async def handle_message(callback: aiogram.types.CallbackQuery):
 
 @callback_router.callback_query(F.data == "menu2_films")
 async def handle_message(callback: aiogram.types.CallbackQuery):
-    await callback.answer(text="bla")
+    await callback.answer()
     await handle_films(callback.message)
 
 
@@ -103,3 +120,9 @@ async def handle_message(callback: aiogram.types.CallbackQuery):
 async def handle_message(callback: aiogram.types.CallbackQuery):
     await callback.answer()
     await handle_about(callback.message)
+
+
+@callback_router.callback_query(F.data == "back")
+async def handle_back(callback: aiogram.types.CallbackQuery):
+    await callback.answer()
+    await callback.message.edit_text("Выбери функцию", reply_markup=menu_keyboard)

@@ -12,7 +12,7 @@ command_router = Router()
 
 @command_router.message(Command('start'))
 async def handle_start(m: Message) -> None:
-    photo = FSInputFile("Kinobot.jpg")
+    photo = FSInputFile("img/Kinobot.jpg")
     await m.answer_photo(photo, caption="Привет! Это бот для поиска интересных фильмов по вашим интересам.",
                          reply_markup=start_keyboard)
 
