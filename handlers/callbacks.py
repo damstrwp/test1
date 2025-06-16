@@ -38,7 +38,7 @@ async def handle_genre(callback: aiogram.types.CallbackQuery, state: FSMContext)
     await callback.answer()
     await state.set_state(Form.genre)
     await state.update_data(genre=callback.data)
-    await callback.message.edit_text(text="Выбери года", reply_markup=films_keyboard)
+    await callback.message.edit_text(text="Выберите десятилетие", reply_markup=films_keyboard)
 
 
 @callback_router.callback_query(
@@ -49,6 +49,7 @@ async def handle_year(callback: aiogram.types.CallbackQuery, state: FSMContext):
     await state.update_data(years=callback.data)
     data = await state.get_data()
     await callback.message.answer(text=f"Жанр: {data['genre']}, Года: {data['years']}")
+    await state.clear()
     await handle_randfilms(callback.message)
     await callback.message.edit_text(text="Вот список фильмов по вашим критериям:", reply_markup=None)
 
@@ -56,34 +57,42 @@ async def handle_year(callback: aiogram.types.CallbackQuery, state: FSMContext):
 @callback_router.callback_query(F.data == "str2")
 async def handle_arrow(callback: aiogram.types.CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text(text=f"Страница 2", reply_markup=film2_keyboard)
+    await callback.message.edit_text(text=f"Давайте найдем вам фильмы! Выберите жанр.",
+                                     reply_markup=film2_keyboard)
 
 
 @callback_router.callback_query(F.data == "str1")
 async def handle_arrow(callback: aiogram.types.CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text(text="Давайте найдем вам фильмы! Выберете ваши интересы.",
+    await callback.message.edit_text(text="Давайте найдем вам фильмы! Выберите жанр.",
                                      reply_markup=film_keyboard)
 
 
 @callback_router.callback_query(F.data == "start")
 async def handle_start(callback: aiogram.types.CallbackQuery):
     await callback.answer()
-    await callback.message.edit_caption(caption="Привет! Это бот для поиска интересных фильмов по вашим интересам.",
+    await callback.message.edit_caption(caption=f"Привет,{callback.from_user.username}! Это бот для поиска интересных фильмов по вашим интересам.",
                                         reply_markup=None)
+    await callback.message.answer(f"С чего начнем?", reply_markup=menu_keyboard)
+
+
+@callback_router.callback_query(F.data == "continue")
+async def handle_start(callback: aiogram.types.CallbackQuery):
+    await callback.answer()
+    await callback.message.edit_reply_markup(reply_markup=None)
     await callback.message.answer(f"С чего начнем?", reply_markup=menu_keyboard)
 
 
 @callback_router.callback_query(F.data == "menu")
 async def handle_message(callback: aiogram.types.CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Выбери функцию", reply_markup=uprav_keyboard)
+    await callback.message.edit_text("Выберите функцию", reply_markup=uprav_keyboard)
 
 
 @callback_router.callback_query(F.data == "menu2")
 async def handle_message(callback: aiogram.types.CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Выбери функцию", reply_markup=poisk_keyboard)
+    await callback.message.edit_text("Выберите функцию", reply_markup=poisk_keyboard)
 
 
 @callback_router.callback_query(F.data == "menu2_films")
@@ -125,4 +134,4 @@ async def handle_message(callback: aiogram.types.CallbackQuery):
 @callback_router.callback_query(F.data == "back")
 async def handle_back(callback: aiogram.types.CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Выбери функцию", reply_markup=menu_keyboard)
+    await callback.message.edit_text("Выберите функцию", reply_markup=menu_keyboard)
