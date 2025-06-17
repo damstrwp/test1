@@ -6,16 +6,21 @@ film_keyboard = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="Боевик ⚔️", callback_data="action")],
         [InlineKeyboardButton(text="Комедия 🤪", callback_data="comedy")],
         [InlineKeyboardButton(text="Триллер 💀", callback_data="thriller")],
+        [InlineKeyboardButton(text="Фантастика", callback_data="science_fiction")],
+        [InlineKeyboardButton(text="Фэнтези", callback_data="fantasy")],
+        [InlineKeyboardButton(text="Драма", callback_data="drama")],
         [InlineKeyboardButton(text="Вперед ➡️", callback_data="str2")]
     ]
 )
 
 film2_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="Документальный 📚", callback_data="documentary")],
+        [InlineKeyboardButton(text="Исторический 📚", callback_data="documentary")],
         [InlineKeyboardButton(text="Мультфильм 🫅🏼", callback_data="cartoon")],
         [InlineKeyboardButton(text="Детектив 🕵🏻", callback_data="detective")],
         [InlineKeyboardButton(text="Ужасы 👻", callback_data="horror")],
+        [InlineKeyboardButton(text="Семейный", callback_data="family")],
+        [InlineKeyboardButton(text="Криминал", callback_data="crime")],
         [InlineKeyboardButton(text="⬅️ Назад", callback_data="str1")]
     ]
 )
@@ -33,7 +38,8 @@ continue_keyboard = InlineKeyboardMarkup(
 
 films_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="80-e🎥", callback_data="eighty"),
+        [InlineKeyboardButton(text="70-e🎥", callback_data="seventy"),
+         InlineKeyboardButton(text="80-e🎥", callback_data="eighty"),
          InlineKeyboardButton(text="90-e🎥", callback_data="ninety"),
          InlineKeyboardButton(text="00-e🎥", callback_data="zero"),
          InlineKeyboardButton(text="10-e🎥", callback_data="ten"),
