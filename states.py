@@ -6,3 +6,5 @@ class Form(StatesGroup):
     years = State()
 
 
+class Film(StatesGroup):
+    name = State()

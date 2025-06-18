@@ -4,7 +4,13 @@ from handlers.commands import command_router
 from handlers.callbacks import callback_router
 from aiogram.fsm.storage.memory import MemoryStorage
 import asyncio
+import logging
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    filename=None
+)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)  # объявляется диспетчер (класс,который налаживает коммуникацию между мной и тг)
 dp.include_router(command_router)
