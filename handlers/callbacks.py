@@ -1,12 +1,13 @@
+import random
+
 import aiogram
 from aiogram import F, Router
 from keyboards.inline import films_keyboard, film2_keyboard, film_keyboard, menu_keyboard, uprav_keyboard, \
     poisk_keyboard, continue_keyboard, kriterii_keyboard, film_genre_keyboard, film2_genre_keyboard, films_year_keyboard
-from aiogram.types import ReplyKeyboardRemove
 from handlers.commands import handle_films, handle_film, handle_randfilms, handle_help, handle_menu, handle_about, \
     handle_films_genre, handle_films_year
 from aiogram.fsm.context import FSMContext
-from states import Form,Film
+from states import Form, Film
 from database import get_film, get_film_genre, get_film_year
 import logging
 
@@ -114,11 +115,21 @@ async def handle_genre(callback: aiogram.types.CallbackQuery, state: FSMContext)
         text=f"{data['genre']}? Интересный выбор! Ловите список фильмов по вашим критериям:",
         reply_markup=None)
     spisok = get_film_genre(genre=data['genre'])
-    formatted_output = ""
-    for i, film in enumerate(spisok, 1):
-        title, genre, year, country, director, about = film
-        formatted_output += f"{i}. {title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i>Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
-    await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
+    if len(spisok) < 10:
+        formatted_output = ""
+        for i, film in enumerate(spisok, 1):
+            title, genre, year, country, director, about = film
+            formatted_output += f"{i}. {title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
+                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
+        await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
+    else:
+        spisok1 = [random.choice(spisok) for i in range(10)]
+        formatted_output = ""
+        for i, film in enumerate(spisok1, 1):
+            title, genre, year, country, director, about = film
+            formatted_output += f"{i}. {title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
+                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
+        await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
     await state.clear()
 
 
@@ -149,12 +160,21 @@ async def handle_year(callback: aiogram.types.CallbackQuery, state: FSMContext):
         text=f"{data['years']}? Круто! Вот список фильмов:",
         reply_markup=None)
     spisok = get_film_year(year=data['years'])
-    formatted_output = ""
-    for i, film in enumerate(spisok, 1):
-        title, genre, year, country, director, about = film
-        formatted_output += f"{i}. {title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
-                            f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
-    await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
+    if len(spisok) < 10:
+        formatted_output = ""
+        for i, film in enumerate(spisok, 1):
+            title, genre, year, country, director, about = film
+            formatted_output += f"{i}. {title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
+                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
+        await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
+    else:
+        spisok1 = [random.choice(spisok) for i in range(10)]
+        formatted_output = ""
+        for i, film in enumerate(spisok1, 1):
+            title, genre, year, country, director, about = film
+            formatted_output += f"{i}. {title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
+                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
+        await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
     await state.clear()
 
 
@@ -182,6 +202,10 @@ async def handle_message(callback: aiogram.types.CallbackQuery):
     await handle_randfilms(callback.message)
 
 
+@callback_router.callback_query(F.data == "random_yes")
+async def handle_random_yes(callback:aiogram.types.CallbackQuery):
+    await callback.answer()
+    await callback.message.answer(text="Хорошего просмотра! Рад был помочь🤗")
 @callback_router.callback_query(
     F.data.in_(
         {"romance", "action", "comedy", "thriller", "anime", "cartoon", "detective", "horror", "science_fiction",
@@ -247,12 +271,22 @@ async def handle_year(callback: aiogram.types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text(
         text=f"Вот список фильмов по вашим критериям (жанр: {data['genre']}, года: {data['years']}):",
         reply_markup=None)
-    spisok = get_film(genre=data['genre'], year=data['years'])
-    formatted_output = ""
-    for i, film in enumerate(spisok, 1):
-        title, genre, year, country, director, about = film
-        formatted_output += f"{i}. {title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i>Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
-    await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
+    spisok = get_film_year(year=data['years'])
+    if len(spisok) < 10:
+        formatted_output = ""
+        for i, film in enumerate(spisok, 1):
+            title, genre, year, country, director, about = film
+            formatted_output += f"{i}. {title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
+                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
+        await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
+    else:
+        spisok1 = [random.choice(spisok) for i in range(10)]
+        formatted_output = ""
+        for i, film in enumerate(spisok1, 1):
+            title, genre, year, country, director, about = film
+            formatted_output += f"{i}. {title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
+                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
+        await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
     await state.clear()
 
 

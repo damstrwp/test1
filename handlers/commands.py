@@ -1,11 +1,10 @@
 from aiogram import Router, F
 from aiogram.filters import Command, or_f
-from aiogram.types import Message, ReplyKeyboardRemove
+from aiogram.types import Message, ReplyKeyboardRemove, FSInputFile
 from keyboards.inline import film_keyboard, start_keyboard, continue_keyboard, film_genre_keyboard, films_year_keyboard
 from keyboards.reply import keyboard
-from aiogram.types import FSInputFile
 from aiogram.fsm.context import FSMContext
-from database import get_randfilm, get_film_name, get_photo, get_photo_name
+from database import get_randfilm, get_film_name, get_photo, get_photo_name, maximum
 from states import Film
 import random
 
@@ -47,18 +46,25 @@ async def handle_films(m: Message) -> None:
 
 @command_router.message(or_f(Command("randfilm"), F.text == "Рандомный фильм"))
 async def handle_randfilms(m: Message) -> None:
-    id = random.randint(1, 13)
+    id = random.randint(1, maximum())
     spisok = get_randfilm(id=id)
-    print(spisok)
     gph = get_photo(id=id)
-    photo = FSInputFile(gph[0][0])
-    formatted_output = ""
-    for i, film in enumerate(spisok, 1):
-        title, genre, year, country, director, about = film
-        formatted_output = f"{title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
-                           f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
-    await m.answer_photo(caption=formatted_output.strip(), photo=photo, parse_mode='HTML',
-                         reply_markup=continue_keyboard)
+    if gph[0][0] == "":
+        formatted_output = ""
+        for i, film in enumerate(spisok, 1):
+            title, genre, year, country, director, about = film
+            formatted_output = f"{title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
+                               f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
+        await m.answer(text=formatted_output.strip())
+    else:
+        photo = FSInputFile(gph[0][0])
+        formatted_output = ""
+        for i, film in enumerate(spisok, 1):
+            title, genre, year, country, director, about = film
+            formatted_output = f"{title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
+                               f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
+        await m.answer_photo(caption=formatted_output.strip(), photo=photo, parse_mode='HTML',
+                             reply_markup=continue_keyboard)
 
 
 @command_router.message(or_f(Command('film'), F.text == "Поиск фильмов"))
@@ -73,20 +79,26 @@ async def find_film(m: Message, state: FSMContext):
     await state.update_data(name=m.text)
     data = await state.get_data()
     spisok = get_film_name(f"<b><u>{data['name']}</u></b>")
-    print(spisok)
     gph = get_photo_name(f"<b><u>{data['name']}</u></b>")
-    print(gph)
-    if len(spisok)>0:
-        photo = FSInputFile(gph[0][0])
+    if gph[0][0] == "":
         formatted_output = ""
         for i, film in enumerate(spisok, 1):
             title, genre, year, country, director, about = film
             formatted_output = f"{title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
-        await m.answer_photo(caption=formatted_output.strip(), photo=photo, parse_mode='HTML',
-                             reply_markup=continue_keyboard)
+        await m.answer(text=formatted_output.strip())
     else:
-        await m.answer(text="Такого фильма нет) попробуйте другой.")
+        if len(spisok) > 0:
+            photo = FSInputFile(gph[0][0])
+            formatted_output = ""
+            for i, film in enumerate(spisok, 1):
+                title, genre, year, country, director, about = film
+                formatted_output = f"{title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
+                                   f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
+            await m.answer_photo(caption=formatted_output.strip(), photo=photo, parse_mode='HTML',
+                                 reply_markup=continue_keyboard)
+        else:
+            await m.answer(text="Такого фильма нет или вы не правильно его написали) Попробуйте другой.")
     await state.clear()
 
 
@@ -105,8 +117,8 @@ async def handle_help(m: Message) -> None:
                     f"/about - расскажет о чем этот бот \n"
                     f"<i>Поиск фильма:</i>\n"
                     f"/genre_year - найти фильмы по жанрам и годам \n"
-                    f"/genre - найти фильмы по жанрам"
-                    f"/year - найти фильмы по годам"
+                    f"/genre - найти фильмы по жанрам\n"
+                    f"/year - найти фильмы по годам\n"
                     f"/film - поиск определенного фильма по названию\n"
                     f"/randfilm - рандомный фильм ")
     await m.answer(text=help_message, parse_mode="HTML", reply_markup=ReplyKeyboardRemove())

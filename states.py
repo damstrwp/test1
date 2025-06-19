@@ -8,3 +8,13 @@ class Form(StatesGroup):
 
 class Film(StatesGroup):
     name = State()
+
+
+class New_Film(StatesGroup):
+    film = State()
+    genre = State()
+    year = State()
+    country = State()
+    director = State()
+    about = State()
+    photo = State()

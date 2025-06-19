@@ -34,6 +34,13 @@ continue_keyboard = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="Продолжим?👀", callback_data="continue")]
     ]
 )
+random_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="Супер!👍",callback_data="random_yes"),
+         InlineKeyboardButton(text="Другой фильм👎",callback_data="menu2_randfilm")],
+        [InlineKeyboardButton(text="Продолжим?👀",callback_data="continue")]
+    ]
+)
 
 films_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
