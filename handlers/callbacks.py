@@ -6,7 +6,7 @@ from aiogram.types import ReplyKeyboardRemove
 from handlers.commands import handle_films, handle_film, handle_randfilms, handle_help, handle_menu, handle_about, \
     handle_films_genre, handle_films_year
 from aiogram.fsm.context import FSMContext
-from states import Form
+from states import Form,Film
 from database import get_film, get_film_genre, get_film_year
 import logging
 
@@ -111,7 +111,7 @@ async def handle_genre(callback: aiogram.types.CallbackQuery, state: FSMContext)
     await state.update_data(genre=genre_ru)
     data = await state.get_data()
     await callback.message.edit_text(
-        text=f"Вот список фильмов по вашим критериям (Жанр: {data['genre']}):",
+        text=f"{data['genre']}? Интересный выбор! Ловите список фильмов по вашим критериям:",
         reply_markup=None)
     spisok = get_film_genre(genre=data['genre'])
     formatted_output = ""
@@ -146,7 +146,7 @@ async def handle_year(callback: aiogram.types.CallbackQuery, state: FSMContext):
     await state.update_data(years=year_ru)
     data = await state.get_data()
     await callback.message.edit_text(
-        text=f"Вот список фильмов по вашим критериям (Года: {data['years']}):",
+        text=f"{data['years']}? Круто! Вот список фильмов:",
         reply_markup=None)
     spisok = get_film_year(year=data['years'])
     formatted_output = ""
@@ -171,9 +171,9 @@ async def handle_back(callback: aiogram.types.CallbackQuery):
 
 
 @callback_router.callback_query(F.data == "menu2_poisk")  # по названию
-async def handle_message(callback: aiogram.types.CallbackQuery):
+async def handle_message(callback: aiogram.types.CallbackQuery, state: FSMContext):
     await callback.answer()
-    await handle_film(callback.message)
+    await handle_film(callback.message, state)
 
 
 @callback_router.callback_query(F.data == "menu2_randfilm")  # рандоиный фильм
