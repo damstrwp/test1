@@ -115,8 +115,8 @@ films_year_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
         [InlineKeyboardButton(text="🎥70-e", callback_data="seventy1"),
          InlineKeyboardButton(text="🎥80-e", callback_data="eighty1"),
-         InlineKeyboardButton(text="🎥90-e", callback_data="ninety1"),
-         InlineKeyboardButton(text="🎥00-e", callback_data="zero1"),
+         InlineKeyboardButton(text="🎥90-e", callback_data="ninety1")],
+         [InlineKeyboardButton(text="🎥00-e", callback_data="zero1"),
          InlineKeyboardButton(text="🎥10-e", callback_data="ten1"),
          InlineKeyboardButton(text="🎥20-e", callback_data="twenty1")]
 
