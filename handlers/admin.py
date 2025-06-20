@@ -69,4 +69,5 @@ async def set_genre(m: Message, state: FSMContext):
         about=data['about'],
         photo=""
     )
+    await m.answer("Новый фильм добавлен")
     await state.clear()

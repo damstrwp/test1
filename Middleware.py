@@ -2,6 +2,9 @@ import time
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 from collections import defaultdict
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # Создаём класс промежуточного слоя (middleware), наследуем его от BaseMiddleware
@@ -22,7 +25,7 @@ class AntiFloodMiddleware(BaseMiddleware):
         # Если пользователь отправил сообщение раньше, чем прошло delay секунд
         if current_time - self.last_time[user_id] < self.delay:
             # Отвечаем ему, что нужно подождать
-            await event.answer("Подожди немного")
+            await event.answer("Подождите немного")
             return  # Прерываем обработку — хендлер не будет вызван
         else:
             # Обновляем время последнего сообщения пользователя
@@ -36,10 +39,11 @@ class AdminMiddleware(BaseMiddleware):
         self.id = 1213543958
 
     async def __call__(self, handler, event: Message, data):
+        logger.info(f"Пользователь {event.from_user.id} зашел в middleware")
+
         user_id = event.from_user.id
+
         if user_id == self.id:
             return await handler(event, data)
         else:
             return
-
-

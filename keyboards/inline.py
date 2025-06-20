@@ -6,20 +6,20 @@ film_keyboard = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="Боевик ⚔️", callback_data="action")],
         [InlineKeyboardButton(text="Комедия 🤪", callback_data="comedy")],
         [InlineKeyboardButton(text="Триллер 💀", callback_data="thriller")],
-        [InlineKeyboardButton(text="Фантастика", callback_data="science_fiction")],
-        [InlineKeyboardButton(text="Фэнтези", callback_data="fantasy")],
-        [InlineKeyboardButton(text="Драма", callback_data="drama")],
+        [InlineKeyboardButton(text="Фантастика 👽", callback_data="science_fiction")],
+        [InlineKeyboardButton(text="Фэнтези 🧚", callback_data="fantasy")],
+        [InlineKeyboardButton(text="Драма 😭", callback_data="drama")],
         [InlineKeyboardButton(text="Вперед ➡️", callback_data="str2")]
     ]
 )
 
 film2_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="Аниме", callback_data="anime")],
+        [InlineKeyboardButton(text="Аниме 👾", callback_data="anime")],
         [InlineKeyboardButton(text="Мультфильм 🫅🏼", callback_data="cartoon")],
         [InlineKeyboardButton(text="Детектив 🕵🏻", callback_data="detective")],
         [InlineKeyboardButton(text="Ужасы 👻", callback_data="horror")],
-        [InlineKeyboardButton(text="Криминал", callback_data="crime")],
+        [InlineKeyboardButton(text="Криминал 💰", callback_data="crime")],
         [InlineKeyboardButton(text="⬅️ Назад", callback_data="str1")]
     ]
 )
@@ -36,20 +36,20 @@ continue_keyboard = InlineKeyboardMarkup(
 )
 random_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="Супер!👍",callback_data="random_yes"),
-         InlineKeyboardButton(text="Другой фильм👎",callback_data="menu2_randfilm")],
-        [InlineKeyboardButton(text="Продолжим?👀",callback_data="continue")]
+        [InlineKeyboardButton(text="Супер!👍", callback_data="random_yes"),
+         InlineKeyboardButton(text="Другой фильм👎", callback_data="menu2_randfilm")],
+        [InlineKeyboardButton(text="Продолжим?👀", callback_data="continue")]
     ]
 )
 
 films_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="70-e🎥", callback_data="seventy"),
-         InlineKeyboardButton(text="80-e🎥", callback_data="eighty"),
-         InlineKeyboardButton(text="90-e🎥", callback_data="ninety"),
-         InlineKeyboardButton(text="00-e🎥", callback_data="zero"),
-         InlineKeyboardButton(text="10-e🎥", callback_data="ten"),
-         InlineKeyboardButton(text="20-e🎥", callback_data="twenty")],
+        [InlineKeyboardButton(text="🎥70-e", callback_data="seventy"),
+         InlineKeyboardButton(text="🎥80-e", callback_data="eighty"),
+         InlineKeyboardButton(text="🎥90-e", callback_data="ninety")],
+        [InlineKeyboardButton(text="🎥00-e", callback_data="zero"),
+         InlineKeyboardButton(text="🎥10-e", callback_data="ten"),
+         InlineKeyboardButton(text="🎥20-e", callback_data="twenty")],
         [InlineKeyboardButton(text="⬅️ Назад", callback_data="str1")]
 
     ]
@@ -87,40 +87,38 @@ kriterii_keyboard = InlineKeyboardMarkup(
     ]
 )
 
-
 film_genre_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
         [InlineKeyboardButton(text="Мелодрама 🥹", callback_data="romance1")],
         [InlineKeyboardButton(text="Боевик ⚔️", callback_data="action1")],
         [InlineKeyboardButton(text="Комедия 🤪", callback_data="comedy1")],
         [InlineKeyboardButton(text="Триллер 💀", callback_data="thriller1")],
-        [InlineKeyboardButton(text="Фантастика", callback_data="science_fiction1")],
-        [InlineKeyboardButton(text="Фэнтези", callback_data="fantasy1")],
-        [InlineKeyboardButton(text="Драма", callback_data="drama1")],
+        [InlineKeyboardButton(text="Фантастика 👽", callback_data="science_fiction1")],
+        [InlineKeyboardButton(text="Фэнтези 🧚", callback_data="fantasy1")],
+        [InlineKeyboardButton(text="Драма 😭", callback_data="drama1")],
         [InlineKeyboardButton(text="Вперед ➡️", callback_data="str2_2")]
     ]
 )
 
 film2_genre_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="Аниме", callback_data="anime1")],
+        [InlineKeyboardButton(text="Аниме 👾", callback_data="anime1")],
         [InlineKeyboardButton(text="Мультфильм 🫅🏼", callback_data="cartoon1")],
         [InlineKeyboardButton(text="Детектив 🕵🏻", callback_data="detective1")],
         [InlineKeyboardButton(text="Ужасы 👻", callback_data="horror1")],
-        [InlineKeyboardButton(text="Криминал", callback_data="crime1")],
+        [InlineKeyboardButton(text="Криминал 💰", callback_data="crime1")],
         [InlineKeyboardButton(text="⬅️ Назад", callback_data="str1_2")]
     ]
 )
 
 films_year_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="70-e🎥", callback_data="seventy1"),
-         InlineKeyboardButton(text="80-e🎥", callback_data="eighty1"),
-         InlineKeyboardButton(text="90-e🎥", callback_data="ninety1"),
-         InlineKeyboardButton(text="00-e🎥", callback_data="zero1"),
-         InlineKeyboardButton(text="10-e🎥", callback_data="ten1"),
-         InlineKeyboardButton(text="20-e🎥", callback_data="twenty1")],
-        [InlineKeyboardButton(text="⬅️ Назад", callback_data="str1")]
+        [InlineKeyboardButton(text="🎥70-e", callback_data="seventy1"),
+         InlineKeyboardButton(text="🎥80-e", callback_data="eighty1"),
+         InlineKeyboardButton(text="🎥90-e", callback_data="ninety1"),
+         InlineKeyboardButton(text="🎥00-e", callback_data="zero1"),
+         InlineKeyboardButton(text="🎥10-e", callback_data="ten1"),
+         InlineKeyboardButton(text="🎥20-e", callback_data="twenty1")]
 
     ]
 )

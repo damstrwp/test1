@@ -3,12 +3,12 @@ import random
 import aiogram
 from aiogram import F, Router
 from keyboards.inline import films_keyboard, film2_keyboard, film_keyboard, menu_keyboard, uprav_keyboard, \
-    poisk_keyboard, continue_keyboard, kriterii_keyboard, film_genre_keyboard, film2_genre_keyboard, films_year_keyboard
+    poisk_keyboard, continue_keyboard, kriterii_keyboard, film_genre_keyboard, film2_genre_keyboard
 from handlers.commands import handle_films, handle_film, handle_randfilms, handle_help, handle_menu, handle_about, \
     handle_films_genre, handle_films_year
 from aiogram.fsm.context import FSMContext
-from states import Form, Film
-from database import get_film, get_film_genre, get_film_year
+from states import Form
+from database import get_film_genre, get_film_year, get_film
 import logging
 
 logger = logging.getLogger(__name__)
@@ -123,7 +123,12 @@ async def handle_genre(callback: aiogram.types.CallbackQuery, state: FSMContext)
                                 f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
         await callback.message.answer(text=formatted_output.strip(), parse_mode='HTML', reply_markup=continue_keyboard)
     else:
-        spisok1 = [random.choice(spisok) for i in range(10)]
+        spisok1 = []
+        for i in range(10):
+            a = random.choice(spisok)
+            spisok1.append(a)
+            spisok.remove(a)
+
         formatted_output = ""
         for i, film in enumerate(spisok1, 1):
             title, genre, year, country, director, about = film
@@ -203,9 +208,11 @@ async def handle_message(callback: aiogram.types.CallbackQuery):
 
 
 @callback_router.callback_query(F.data == "random_yes")
-async def handle_random_yes(callback:aiogram.types.CallbackQuery):
+async def handle_random_yes(callback: aiogram.types.CallbackQuery):
     await callback.answer()
     await callback.message.answer(text="Хорошего просмотра! Рад был помочь🤗")
+
+
 @callback_router.callback_query(
     F.data.in_(
         {"romance", "action", "comedy", "thriller", "anime", "cartoon", "detective", "horror", "science_fiction",
@@ -245,8 +252,8 @@ async def handle_genre(callback: aiogram.types.CallbackQuery, state: FSMContext)
     await callback.message.edit_text(text="Выберите десятилетие", reply_markup=films_keyboard)
 
 
-@callback_router.callback_query(
-    F.data.in_({"seventy", "eighty", "ninety", "zero", "ten", "twenty"}))
+@callback_router.callback_query(Form.genre,
+                                F.data.in_({"seventy", "eighty", "ninety", "zero", "ten", "twenty"}))
 async def handle_year(callback: aiogram.types.CallbackQuery, state: FSMContext):
     await callback.answer()
     year = callback.data
@@ -268,11 +275,15 @@ async def handle_year(callback: aiogram.types.CallbackQuery, state: FSMContext):
     await state.set_state(Form.years)
     await state.update_data(years=year_ru)
     data = await state.get_data()
-    await callback.message.edit_text(
-        text=f"Вот список фильмов по вашим критериям (жанр: {data['genre']}, года: {data['years']}):",
-        reply_markup=None)
-    spisok = get_film_year(year=data['years'])
-    if len(spisok) < 10:
+    spisok = get_film(genre=data['genre'], year=data['years'])
+    if len(spisok) == 0:
+        await callback.message.edit_text(
+            text="Пока что по вашему запросу нет фильмов 😢 Если есть предолжения,то  можете  написать админу( @d1mstrwp )",
+            reply_markup=continue_keyboard)
+    elif len(spisok) < 10:
+        await callback.message.edit_text(
+            text=f"Держи список:",
+            reply_markup=None)
         formatted_output = ""
         for i, film in enumerate(spisok, 1):
             title, genre, year, country, director, about = film
@@ -329,3 +340,4 @@ async def handle_start(callback: aiogram.types.CallbackQuery):
 async def handle_back(callback: aiogram.types.CallbackQuery):
     await callback.answer()
     await callback.message.edit_text("Выберите функцию", reply_markup=menu_keyboard)
+

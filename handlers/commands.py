@@ -1,7 +1,8 @@
 from aiogram import Router, F
 from aiogram.filters import Command, or_f
 from aiogram.types import Message, ReplyKeyboardRemove, FSInputFile
-from keyboards.inline import film_keyboard, start_keyboard, continue_keyboard, film_genre_keyboard, films_year_keyboard
+from keyboards.inline import film_keyboard, start_keyboard, continue_keyboard, film_genre_keyboard, films_year_keyboard, \
+    random_keyboard
 from keyboards.reply import keyboard
 from aiogram.fsm.context import FSMContext
 from database import get_randfilm, get_film_name, get_photo, get_photo_name, maximum
@@ -55,7 +56,7 @@ async def handle_randfilms(m: Message) -> None:
             title, genre, year, country, director, about = film
             formatted_output = f"{title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
-        await m.answer(text=formatted_output.strip())
+        await m.answer(text=formatted_output.strip(), parse_mode='HTML')
     else:
         photo = FSInputFile(gph[0][0])
         formatted_output = ""
@@ -64,7 +65,7 @@ async def handle_randfilms(m: Message) -> None:
             formatted_output = f"{title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
         await m.answer_photo(caption=formatted_output.strip(), photo=photo, parse_mode='HTML',
-                             reply_markup=continue_keyboard)
+                             reply_markup=random_keyboard)
 
 
 @command_router.message(or_f(Command('film'), F.text == "Поиск фильмов"))
@@ -86,7 +87,7 @@ async def find_film(m: Message, state: FSMContext):
             title, genre, year, country, director, about = film
             formatted_output = f"{title}\n<i>Жанр:</i> {genre}\n<i>Год:</i> {year}\n<i>Страна:</i> {country}\n<i" \
                                f">Режиссер:</i> {director}\n<i>Краткое описание:</i> {about}\n\n"
-        await m.answer(text=formatted_output.strip())
+        await m.answer(text=formatted_output.strip(), parse_mode="HTML")
     else:
         if len(spisok) > 0:
             photo = FSInputFile(gph[0][0])
@@ -98,7 +99,7 @@ async def find_film(m: Message, state: FSMContext):
             await m.answer_photo(caption=formatted_output.strip(), photo=photo, parse_mode='HTML',
                                  reply_markup=continue_keyboard)
         else:
-            await m.answer(text="Такого фильма нет или вы не правильно его написали) Попробуйте другой.")
+            await m.answer(text="Такого фильма нет или вы не правильно его написали) Попробуйте другой. Если есть предолжения,то  можете  написать админу( @d1mstrwp )")
     await state.clear()
 
 
@@ -136,10 +137,9 @@ async def handle_bye(m: Message):
     byes = ["До новых встреч!😌", "Пока-пока!😉", "До свидания! 😊"]
     await m.answer(text=byes[random.randint(0, len(byes) - 1)])
 
-
-@command_router.message()
-async def echo_message(message: Message) -> None:
-    try:
-        await message.reply(text=message.text)
-    except TypeError:
-        await message.answer("Nice try!")
+# @command_router.message()
+# async def echo_message(message: Message) -> None:
+#     try:
+#         await message.reply(text=message.text)
+#     except TypeError:
+#         await message.answer("Nice try!")
